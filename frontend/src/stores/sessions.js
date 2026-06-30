@@ -10,19 +10,19 @@ export const useSessionStore = defineStore('sessions', () => {
   let reconnectDelay = 1000
 
   async function fetchSessions() {
-    const res = await fetch('/api/sessions')
+    const res = await fetch(import.meta.env.BASE_URL + 'api/sessions')
     const data = await res.json()
     sessions.value = data.sessions
   }
 
   async function fetchShells() {
-    const res = await fetch('/api/sessions/shells')
+    const res = await fetch(import.meta.env.BASE_URL + 'api/sessions/shells')
     const data = await res.json()
     shells.value = data.shells
   }
 
   async function createSession(name, shell) {
-    const res = await fetch('/api/sessions', {
+    const res = await fetch(import.meta.env.BASE_URL + 'api/sessions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, shell })
@@ -37,7 +37,7 @@ export const useSessionStore = defineStore('sessions', () => {
   }
 
   async function stopSession(name) {
-    const res = await fetch(`/api/sessions/${name}/stop`, { method: 'POST' })
+    const res = await fetch(import.meta.env.BASE_URL + `api/sessions/${name}/stop`, { method: 'POST' })
     if (!res.ok) {
       const data = await res.json()
       throw new Error(data.error)
@@ -46,7 +46,7 @@ export const useSessionStore = defineStore('sessions', () => {
   }
 
   async function restartSession(name) {
-    const res = await fetch(`/api/sessions/${name}/restart`, { method: 'POST' })
+    const res = await fetch(import.meta.env.BASE_URL + `api/sessions/${name}/restart`, { method: 'POST' })
     if (!res.ok) {
       const data = await res.json()
       throw new Error(data.error)
@@ -55,7 +55,7 @@ export const useSessionStore = defineStore('sessions', () => {
   }
 
   async function removeSession(name) {
-    const res = await fetch(`/api/sessions/${name}`, { method: 'DELETE' })
+    const res = await fetch(import.meta.env.BASE_URL + `api/sessions/${name}`, { method: 'DELETE' })
     if (!res.ok) {
       const data = await res.json()
       throw new Error(data.error)
@@ -72,7 +72,7 @@ export const useSessionStore = defineStore('sessions', () => {
 
   function connectWs() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-    ws = new WebSocket(`${proto}://${location.host}/ws`)
+    ws = new WebSocket(`${proto}://${location.host}${import.meta.env.BASE_URL}ws`)
 
     ws.onmessage = () => {
       fetchSessions()

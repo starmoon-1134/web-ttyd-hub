@@ -12,7 +12,7 @@ const currentSession = computed(() => {
 const iframeSrc = computed(() => {
   if (!currentSession.value || currentSession.value.status !== "running")
     return null;
-  return `/terminal/${currentSession.value.name}`;
+  return `${import.meta.env.BASE_URL}terminal/${currentSession.value.name}`;
 });
 </script>
 
