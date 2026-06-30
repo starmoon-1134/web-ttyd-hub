@@ -105,8 +105,8 @@ class SessionManager extends EventEmitter {
       '-b', `/terminal/${name}`,
       '-s', '16',
       '-t', 'theme={"background":"#000000"}',
-      '-t', 'fontSize=16',
-      '-t', 'scrollback=50000',
+      '--client-option', 'fontSize=16',
+      '--client-option', 'scrollback=50000',
       ...tmuxArgs
     ], {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -200,8 +200,8 @@ class SessionManager extends EventEmitter {
       '-b', `/terminal/${name}`,
       '-s', '16',
       '-t', 'theme={"background":"#000000"}',
-      '-t', 'fontSize=16',
-      '-t', 'scrollback=50000',
+      '--client-option', 'fontSize=16',
+      '--client-option', 'scrollback=50000',
       ...tmuxArgs
     ], {
       stdio: ['ignore', 'pipe', 'pipe'],

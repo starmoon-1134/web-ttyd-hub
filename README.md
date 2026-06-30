@@ -112,18 +112,19 @@ npm run dev
 由于 tmux 默认使用 alternate screen，会导致浏览器端滚动条无法正常同步。推荐在 `~/.tmux.conf` 中添加以下配置：
 
 ```tmux
-# 启用鼠标模式（滚轮滚动终端缓冲区，点击切换面板）
-set -g mouse on
+# 关闭鼠标模式（让 xterm.js 原生处理滚动，滚动条正常工作）
+set -g mouse off
 
-# 历史缓冲区行数
+# 历史缓冲区行数（通过 Ctrl+b [ 进入 copy mode 查看）
 set -g history-limit 50000
 
-# 禁用 alternate screen（关键：让 xterm.js 滚动条与 tmux 缓冲区同步）
+# 禁用 alternate screen（关键：让 xterm.js 滚动条正常工作）
 set -ga terminal-overrides ",*:smcup@:rmcup@"
 ```
 
-- `mouse on` — 鼠标滚轮滚动 tmux 缓冲区，而非切换 shell 命令历史
-- `terminal-overrides` — 禁止 tmux 使用 alternate screen，使 xterm.js 能正常积累 scrollback，滚动条与内容同步
+- `mouse off` — 关闭 tmux 鼠标截获，让 xterm.js 原生处理滚轮和滚动条拖拽
+- `terminal-overrides` — 禁止 tmux 使用 alternate screen，使 xterm.js 能正常积累 scrollback
+- 键盘翻历史：`Ctrl+b` `[` 进入 copy mode，方向键 / PgUp / PgDn 滚动
 
 > 配置后需执行 `tmux kill-server` 再新建会话生效。副作用：vim/less/man 退出后不会恢复之前的屏幕（按 `Ctrl+L` 清除即可）。
 
