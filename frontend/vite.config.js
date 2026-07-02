@@ -1,8 +1,20 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { existsSync, readFileSync } from 'fs'
+import { resolve } from 'path'
+
+// 从项目根 .env 读取 VITE_BASE_URL，支持自由配置子路径
+const rootEnv = existsSync('../.env')
+  ? Object.fromEntries(
+      readFileSync('../.env', 'utf-8')
+        .split('\n')
+        .filter((l) => l && !l.startsWith('#'))
+        .map((l) => { const i = l.indexOf('='); return [l.slice(0, i), l.slice(i + 1)] })
+    )
+  : {}
 
 export default defineConfig({
-  base: '/web-terminal-Ju2k-B4Am-1324-yoQ3/',
+  base: rootEnv.VITE_BASE_URL || '/',
   plugins: [vue()],
   build: {
     outDir: '../server/public',
