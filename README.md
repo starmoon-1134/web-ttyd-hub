@@ -128,6 +128,19 @@ set -ga terminal-overrides ",*:smcup@:rmcup@"
 
 > 配置后需执行 `tmux kill-server` 再新建会话生效。副作用：vim/less/man 退出后不会恢复之前的屏幕（按 `Ctrl+L` 清除即可）。
 
+## ⌨ Ctrl+C 智能复制
+
+Web 终端中 `Ctrl+C` 的行为会根据是否选中文本自动切换：
+
+| 状态 | 行为 |
+|------|------|
+| 有选中文本 | 复制到剪贴板（不发送到终端） |
+| 无选中文本 | 发送 SIGINT 给终端进程 |
+
+原理：代理层拦截 ttyd 的 HTML 响应，注入脚本，利用 xterm.js 的 `attachCustomKeyEventHandler` API 判断 `hasSelection()` 状态。
+
+> 仅影响通过 Web TTYd Hub 代理的 ttyd 会话（`/terminal/:name`）。
+
 ## 📄 License
 
 MIT
