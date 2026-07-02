@@ -14,6 +14,18 @@
 
 Web TTYd Hub 是一个基于 ttyd + tmux 的 Web 终端会话管理器。它让你在浏览器中创建、管理和切换多个终端会话，无论你在电脑前还是躺在沙发上用手机，都能拥有完整的命令行体验。
 
+> 本仓库基于 [sosopop/web-ttyd-hub](https://github.com/sosopop/web-ttyd-hub) fork。
+
+### 与上游差异
+
+| 特性 | 说明 |
+|------|------|
+| **子路径部署** | 支持 `/web-terminal-xxx/` 等前缀，前端 + API + WebSocket 全路径适配 |
+| **增大字体** | ttyd `-s 16` + `--client-option fontSize=16` |
+| **增大滚动缓冲** | `--client-option scrollback=50000`，匹配 tmux history-limit |
+| **Ctrl+C 智能复制** | 选中文本时复制到剪贴板，未选中时发送 SIGINT |
+| **tmux 配置建议** | mouse off + alternate screen 关闭，保证滚动条正常 |
+
 ## 💡 为什么需要它
 
 你是否有过这样的场景：
@@ -130,16 +142,7 @@ set -ga terminal-overrides ",*:smcup@:rmcup@"
 
 ## ⌨ Ctrl+C 智能复制
 
-Web 终端中 `Ctrl+C` 的行为会根据是否选中文本自动切换：
-
-| 状态 | 行为 |
-|------|------|
-| 有选中文本 | 复制到剪贴板（不发送到终端） |
-| 无选中文本 | 发送 SIGINT 给终端进程 |
-
-原理：代理层拦截 ttyd 的 HTML 响应，注入脚本，利用 xterm.js 的 `attachCustomKeyEventHandler` API 判断 `hasSelection()` 状态。
-
-> 仅影响通过 Web TTYd Hub 代理的 ttyd 会话（`/terminal/:name`）。
+选中文本时 `Ctrl+C` → 复制，无选中时 → 发送 SIGINT。通过代理层注入脚本，调用 xterm.js 的 `attachCustomKeyEventHandler` 实现。
 
 ## 📄 License
 
